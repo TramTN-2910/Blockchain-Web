@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(147, 51, 234, 0.4) transparent;
+  }
+
+  html.dark {
+    scrollbar-color: rgba(168, 85, 247, 0.4) transparent;
+  }
+
+  body {
+    @apply antialiased transition-colors duration-200 selection:bg-purple-500 selection:text-white;
+  }
+}
+
+/* Custom Webkit Scrollbar (Chrome, Edge, Safari, Opera) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.45);
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.45);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.85);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(129, 140, 248, 0.85);
+}
+
+/* Utility classes */
+.glass-card {
+  @apply bg-white/90 dark:bg-[#131b2e]/90 backdrop-blur-md border border-purple-100/60 dark:border-slate-800/80 rounded-2xl shadow-xl shadow-purple-500/5 transition-all duration-300;
+}
+
+.glass-card-hover {
+  @apply hover:shadow-2xl hover:shadow-purple-500/10 hover:-translate-y-0.5 transition-all duration-300;
+}
+
+.gradient-text {
+  @apply bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 bg-clip-text text-transparent font-extrabold;
+}
+
+.gradient-badge {
+  @apply bg-gradient-to-r from-purple-100 via-indigo-100 to-blue-100 dark:from-purple-950/60 dark:via-indigo-950/60 dark:to-blue-950/60 text-purple-700 dark:text-purple-300 border border-purple-200/50 dark:border-purple-800/40;
+}
