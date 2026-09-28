@@ -10,8 +10,6 @@ interface Member {
   id: string;
   studentId: string;
   name: string;
-  role_vn: string;
-  role_en: string;
   avatar: string;
   avatarFallback: string;
   description_vn: string;
@@ -23,8 +21,6 @@ const MEMBERS: Member[] = [
     id: 'nga-tran',
     studentId: '031340240018',
     name: 'Trần Thị Tuyết Nga',
-    role_vn: 'Mật Mã Học & Chữ Ký Số',
-    role_en: 'Cryptography & Digital Signatures',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80',
     avatarFallback: 'TN',
     description_vn:
@@ -36,8 +32,6 @@ const MEMBERS: Member[] = [
     id: 'minh-hoang',
     studentId: '031340240017',
     name: 'Hoàng Nhật Minh',
-    role_vn: 'Đồng Thuận & Phát Hiện Tấn Công',
-    role_en: 'Consensus & Tamper Detection',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80',
     avatarFallback: 'NM',
     description_vn:
@@ -49,8 +43,6 @@ const MEMBERS: Member[] = [
     id: 'phuc-pham',
     studentId: '031340240044',
     name: 'Phạm Nguyễn Gia Phúc',
-    role_vn: 'Ví Điện Tử & Giao Dịch',
-    role_en: 'Crypto Wallet & Transactions',
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80',
     avatarFallback: 'GP',
     description_vn:
@@ -62,8 +54,6 @@ const MEMBERS: Member[] = [
     id: 'phong-huynh',
     studentId: '031340240023',
     name: 'Huỳnh Thanh Phong',
-    role_vn: 'Mạng P2P & Hàng Đợi Mempool',
-    role_en: 'P2P Network & Mempool Queue',
     avatar: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=400&auto=format&fit=crop&q=80',
     avatarFallback: 'TP',
     description_vn:
@@ -75,8 +65,6 @@ const MEMBERS: Member[] = [
     id: 'vinh-nguyen',
     studentId: '031340240039',
     name: 'Nguyễn Quang Vinh',
-    role_vn: 'Liên Kết Khối & Sổ Cái Blockchain',
-    role_en: 'Previous Hash & Blockchain Ledger',
     avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&auto=format&fit=crop&q=80',
     avatarFallback: 'QV',
     description_vn:
@@ -88,8 +76,6 @@ const MEMBERS: Member[] = [
     id: 'thu-le',
     studentId: '031340240030',
     name: 'Lê Minh Thư',
-    role_vn: 'Cấu Trúc Khối & Cây Merkle',
-    role_en: 'Block Anatomy & Merkle Tree',
     avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&auto=format&fit=crop&q=80',
     avatarFallback: 'MT',
     description_vn:
@@ -125,7 +111,7 @@ function MemberCard({ member, isEn }: { member: Member; isEn: boolean }) {
       {/* Card Inner Surface */}
       <SpotlightCard className="relative h-full rounded-3xl p-6 bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-xl border border-purple-100/80 dark:border-slate-800 shadow-xl shadow-purple-500/5 flex flex-col justify-between" spotlightColor="rgba(168, 85, 247, 0.18)">
         <div className="space-y-4 relative z-10">
-          {/* Top row: Avatar on Left, Name & Role on Right */}
+          {/* Top row: Avatar on Left, Name & MSSV on Right */}
           <div className="flex items-center gap-4">
             {/* Member Photo */}
             <div className="relative shrink-0">
@@ -146,16 +132,13 @@ function MemberCard({ member, isEn }: { member: Member; isEn: boolean }) {
               </div>
             </div>
 
-            {/* Name & Role & MSSV */}
+            {/* Name & MSSV */}
             <div className="min-w-0 flex-1 space-y-1">
               <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">
                 {member.name}
               </h3>
-              <div className="flex flex-wrap items-center gap-1.5">
-                <p className="text-xs sm:text-sm font-semibold text-indigo-600 dark:text-indigo-400 leading-snug">
-                  {isEn ? member.role_en : member.role_vn}
-                </p>
-                <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold bg-purple-100 dark:bg-purple-950/70 text-purple-700 dark:text-purple-300 border border-purple-200/80 dark:border-purple-800/80">
+              <div>
+                <span className="px-2.5 py-0.5 rounded-md text-xs font-mono font-bold bg-purple-100 dark:bg-purple-950/70 text-purple-700 dark:text-purple-300 border border-purple-200/80 dark:border-purple-800/80">
                   {member.studentId}
                 </span>
               </div>
