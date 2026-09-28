@@ -19,7 +19,6 @@ interface TaskAssignment {
   tasksEn: string;
   assignee: string;
   assigneeId?: string;
-  peopleCount: number;
   progress: number;
 }
 
@@ -30,7 +29,6 @@ const TASK_LIST: TaskAssignment[] = [
     tasksEn: 'Design wallet creation, management, and interaction flows',
     assignee: 'Phạm Nguyễn Gia Phúc',
     assigneeId: '031340240044',
-    peopleCount: 1,
     progress: 100
   },
   {
@@ -39,7 +37,6 @@ const TASK_LIST: TaskAssignment[] = [
     tasksEn: 'Simulate transaction creation and TX data structures',
     assignee: 'Phạm Nguyễn Gia Phúc',
     assigneeId: '031340240044',
-    peopleCount: 1,
     progress: 100
   },
   {
@@ -48,7 +45,6 @@ const TASK_LIST: TaskAssignment[] = [
     tasksEn: 'Simulate Hash generation and data variation comparison',
     assignee: 'Trần Thị Tuyết Nga',
     assigneeId: '031340240018',
-    peopleCount: 1,
     progress: 100
   },
   {
@@ -57,7 +53,6 @@ const TASK_LIST: TaskAssignment[] = [
     tasksEn: 'Simulate transaction signing with private key',
     assignee: 'Trần Thị Tuyết Nga',
     assigneeId: '031340240018',
-    peopleCount: 1,
     progress: 100
   },
   {
@@ -66,7 +61,6 @@ const TASK_LIST: TaskAssignment[] = [
     tasksEn: 'Simulate signature verification using public key',
     assignee: 'Trần Thị Tuyết Nga',
     assigneeId: '031340240018',
-    peopleCount: 1,
     progress: 100
   },
   {
@@ -75,7 +69,6 @@ const TASK_LIST: TaskAssignment[] = [
     tasksEn: 'Simulate pending transaction pool before block packing',
     assignee: 'Huỳnh Thanh Phong',
     assigneeId: '031340240023',
-    peopleCount: 1,
     progress: 100
   },
   {
@@ -84,7 +77,6 @@ const TASK_LIST: TaskAssignment[] = [
     tasksEn: 'Simulate multi-node mesh connections & network data exchange',
     assignee: 'Huỳnh Thanh Phong',
     assigneeId: '031340240023',
-    peopleCount: 1,
     progress: 100
   },
   {
@@ -93,7 +85,6 @@ const TASK_LIST: TaskAssignment[] = [
     tasksEn: 'Simulate batching transactions & Merkle Root generation',
     assignee: 'Lê Minh Thư',
     assigneeId: '031340240030',
-    peopleCount: 1,
     progress: 100
   },
   {
@@ -102,7 +93,6 @@ const TASK_LIST: TaskAssignment[] = [
     tasksEn: 'Simulate block structure anatomy and block generation process',
     assignee: 'Lê Minh Thư',
     assigneeId: '031340240030',
-    peopleCount: 1,
     progress: 100
   },
   {
@@ -111,7 +101,6 @@ const TASK_LIST: TaskAssignment[] = [
     tasksEn: 'Simulate cryptographically linking blocks via Previous Hash',
     assignee: 'Nguyễn Quang Vinh',
     assigneeId: '031340240039',
-    peopleCount: 1,
     progress: 100
   },
   {
@@ -120,7 +109,6 @@ const TASK_LIST: TaskAssignment[] = [
     tasksEn: 'Simulate multi-block chain ledger and integrity verification',
     assignee: 'Nguyễn Quang Vinh',
     assigneeId: '031340240039',
-    peopleCount: 1,
     progress: 100
   },
   {
@@ -129,7 +117,6 @@ const TASK_LIST: TaskAssignment[] = [
     tasksEn: 'Simulate validator selection & block validation in PoS',
     assignee: 'Hoàng Nhật Minh',
     assigneeId: '031340240017',
-    peopleCount: 1,
     progress: 100
   },
   {
@@ -138,7 +125,6 @@ const TASK_LIST: TaskAssignment[] = [
     tasksEn: 'Simulate data tampering & blockchain alteration detection',
     assignee: 'Hoàng Nhật Minh',
     assigneeId: '031340240017',
-    peopleCount: 1,
     progress: 100
   }
 ];
@@ -228,7 +214,6 @@ export default function TaskAssignmentsPage() {
               <tr className="border-b border-slate-800 text-slate-400 text-left uppercase text-[10px] tracking-wider bg-slate-950/40">
                 <th className="p-3">Chức Năng</th>
                 <th className="p-3">Nội Dung Thực Hiện</th>
-                <th className="p-3 text-center">Số Lượng Phụ Trách</th>
                 <th className="p-3">Người Phụ Trách</th>
                 <th className="p-3 text-right">Trạng Thái</th>
               </tr>
@@ -243,9 +228,6 @@ export default function TaskAssignmentsPage() {
                   </td>
                   <td className="p-3 text-slate-200">
                     {language === 'vi' ? item.tasksVi : item.tasksEn}
-                  </td>
-                  <td className="p-3 text-center font-mono font-bold text-cyan-400">
-                    {item.peopleCount}
                   </td>
                   <td className="p-3 whitespace-nowrap">
                     <div className="font-semibold text-white">{item.assignee}</div>
