@@ -504,7 +504,48 @@ export function shuffleArray<T>(array: T[]): T[] {
   return result;
 }
 
-// Helper to generate truly randomized questions for Timed Test / Certification Exam
+// Helper to randomize a single question's options while preserving answer integrity
+export function randomizeQuestionOptions(q: Question): Question {
+  return {
+    ...q,
+    options: shuffleArray(q.options || []),
+  };
+}
+
+// Helper to randomize an array of questions and also shuffle the ABCD options of every question
+export function randomizeQuestions(questions: Question[]): Question[] {
+  return shuffleArray(questions).map((q) => randomizeQuestionOptions(q));
+}
+
+// Helper to generate randomized practice questions filtered by topic and difficulty
+export function getShuffledPracticeQuestions(
+  topicParam?: string | null,
+  difficultyParam?: string | null,
+  customQuestions: Question[] = []
+): Question[] {
+  const fullPool = [...ALL_QUESTIONS, ...customQuestions];
+
+  // Deduplicate pool by question ID
+  const uniquePoolMap = new Map<string, Question>();
+  fullPool.forEach((q) => {
+    if (!uniquePoolMap.has(q.id)) {
+      uniquePoolMap.set(q.id, q);
+    }
+  });
+  let pool = Array.from(uniquePoolMap.values());
+
+  if (topicParam) {
+    pool = pool.filter((q) => q.topic_slug === topicParam);
+  }
+  if (difficultyParam && difficultyParam !== 'all') {
+    pool = pool.filter((q) => q.difficulty === difficultyParam);
+  }
+
+  const resultPool = pool.length > 0 ? pool : ALL_QUESTIONS;
+  return randomizeQuestions(resultPool);
+}
+
+// Helper to generate truly randomized questions with randomized options for Timed Test / Certification Exam
 export function generateTestQuestions(count = 40, customQuestions: Question[] = []): Question[] {
   // Combine builtin questions and custom questions
   const fullPool = [...ALL_QUESTIONS, ...customQuestions];
@@ -525,12 +566,12 @@ export function generateTestQuestions(count = 40, customQuestions: Question[] = 
   for (let i = 0; i < count; i++) {
     const baseQ = shuffledPool[i % shuffledPool.length];
     
-    // Optionally shuffle options for maximum randomness while preserving correct answer
+    // Always shuffle options for maximum randomness while preserving correct answer
     const shuffledOptions = shuffleArray(baseQ.options || []);
 
     selected.push({
       ...baseQ,
-      id: `test-q-${i + 1}-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      id: count > pool.length ? `${baseQ.id}-dup-${i + 1}` : baseQ.id,
       options: shuffledOptions,
     });
   }
@@ -538,3 +579,4 @@ export function generateTestQuestions(count = 40, customQuestions: Question[] = 
   // Shuffle final list once more
   return shuffleArray(selected);
 }
+

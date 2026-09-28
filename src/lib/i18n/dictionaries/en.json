@@ -4,6 +4,7 @@
   "subtagline": "Explore how cryptographic hash functions operate through interactive visual simulations. Master the core properties of SHA-256 that secure modern blockchains.",
   "nav": {
     "home": "Home",
+    "lifecycle": "Lifecycle Hub",
     "hash": "Hash Simulator",
     "hash_explain": "SHA-256 Explanation",
     "hash_interaction": "Hash Playground",

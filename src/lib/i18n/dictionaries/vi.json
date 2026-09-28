@@ -4,6 +4,7 @@
   "subtagline": "Khám phá cách hàm băm mật mã hoạt động qua các trực quan hóa tương tác. Hiểu các tính chất của SHA-256 bảo mật chuỗi khối hiện đại.",
   "nav": {
     "home": "Trang chủ",
+    "lifecycle": "Vòng đời Hub",
     "hash": "Mô phỏng Hash",
     "hash_explain": "Giải thích SHA-256",
     "hash_interaction": "Tương tác Hash",

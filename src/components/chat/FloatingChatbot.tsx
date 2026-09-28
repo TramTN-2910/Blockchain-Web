@@ -12,6 +12,7 @@ import {
   Check,
 } from 'lucide-react';
 import { Mascot } from 'page-mascot';
+import { useLanguageStore } from '@/store/useLanguageStore';
 import ReactMarkdown from 'react-markdown';
 
 interface Message {
@@ -23,17 +24,29 @@ interface Message {
   model?: string;
 }
 
-const SUGGESTED_PROMPTS = [
-  '⚡ SHA-256 tạo ra mã băm như thế nào?',
-  '⛏️ Tại sao thợ đào phải tìm Nonce trong Proof of Work?',
-  '🔐 Chữ ký số RSA bảo vệ giao dịch ra sao?',
-  '🌲 Cây Merkle giúp xác thực giao dịch nhanh thế nào?',
-  '🛡️ Hiệu ứng Tuyết lở (Avalanche Effect) là gì?',
-  '⛓️ Vì sao chuỗi khối không thể bị sửa đổi dữ liệu?',
+const SUGGESTED_PROMPTS_VI = [
+  '⚡ 6 bước nén dữ liệu nội bộ của SHA-256 là gì?',
+  '🔑 Cặp khóa ECDSA secp256k1 và địa chỉ ví 0x sinh ra sao?',
+  '⛏️ So sánh cơ chế đồng thuận PoW và PoS (Proof of Stake)?',
+  '🌲 Cây Merkle và SPV Proof giúp xác minh giao dịch nhanh thế nào?',
+  '🛡️ Tấn công 51% và cơ chế kháng sửa đổi khối hoạt động ra sao?',
+  '🌐 Mạng lưới P2P Mesh và giao thức Gossip lan truyền tin thế nào?',
+  '🔐 5 bước tạo khóa và mã hóa giải mã RSA toán học?',
+];
+
+const SUGGESTED_PROMPTS_EN = [
+  '⚡ What are the 6 internal compression phases of SHA-256?',
+  '🔑 How do ECDSA secp256k1 keys and 0x addresses work?',
+  '⛏️ Compare PoW Mining with PoS (Proof of Stake)?',
+  '🌲 How does Merkle Tree enable fast SPV verification?',
+  '🛡️ How do 51% Attacks and block tampering resistance work?',
+  '🌐 How does P2P Gossip protocol propagate transactions?',
+  '🔐 What are the 5 math steps of RSA keygen and encryption?',
 ];
 
 export default function FloatingChatbot() {
   const pathname = usePathname();
+  const { language } = useLanguageStore();
 
   // Do NOT render chatbot on any admin routes
   if (pathname.startsWith('/admin')) {
@@ -45,8 +58,8 @@ export default function FloatingChatbot() {
     {
       id: 'welcome-1',
       role: 'assistant',
-      content: `Xin chào! Tôi là **HubBlock AI** 🤖✨\n\nTôi hỗ trợ giải đáp nhanh & trọng tâm về **SHA-256, Proof of Work, RSA, Cây Merkle và Blockchain**. Bạn cần hỏi gì?`,
-      timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+      content: `Xin chào! Tôi là **HubBlock AI** 🤖✨\n\nTôi hỗ trợ giải đáp nhanh & trọng tâm về **SHA-256, Cặp khóa ECDSA, Proof of Work / PoS, Cây Merkle, Mạng P2P và Mã hóa RSA**. Bạn cần hỏi gì?`,
+      timestamp: '12:00',
     },
   ]);
   const [input, setInput] = useState('');
@@ -55,6 +68,17 @@ export default function FloatingChatbot() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Set actual client time on mount for initial welcome message
+  useEffect(() => {
+    setMessages((prev) =>
+      prev.map((msg) =>
+        msg.id === 'welcome-1'
+          ? { ...msg, timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) }
+          : msg
+      )
+    );
+  }, []);
 
   // Auto scroll to bottom when new messages arrive
   useEffect(() => {
@@ -288,7 +312,7 @@ export default function FloatingChatbot() {
             <div className="p-3 bg-white dark:bg-slate-900 border-t border-slate-200/80 dark:border-slate-800 flex-shrink-0 space-y-2.5">
               {/* Horizontal Scrollable Suggestions Row */}
               <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 select-none -mx-1 px-1">
-                {SUGGESTED_PROMPTS.map((prompt, idx) => (
+                {(language === 'vi' ? SUGGESTED_PROMPTS_VI : SUGGESTED_PROMPTS_EN).map((prompt, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleSend(prompt.replace(/^[^\s]+\s/, ''))}
@@ -306,7 +330,11 @@ export default function FloatingChatbot() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Hỏi về SHA-256, PoW, RSA, Blockchain..."
+                  placeholder={
+                    language === 'vi'
+                      ? 'Hỏi về SHA-256, ECDSA, PoW, PoS, Merkle, RSA...'
+                      : 'Ask about SHA-256, ECDSA, PoW, PoS, Merkle, RSA...'
+                  }
                   rows={1}
                   className="flex-1 max-h-24 resize-none px-3.5 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 font-sans shadow-inner"
                 />
@@ -318,16 +346,20 @@ export default function FloatingChatbot() {
                       ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:scale-105 active:scale-95 shadow-indigo-500/30'
                       : 'bg-slate-200 dark:bg-slate-800 text-slate-400 cursor-not-allowed'
                   }`}
-                  title="Gửi tin nhắn"
+                  title={language === 'vi' ? 'Gửi tin nhắn' : 'Send message'}
                 >
                   <Send className="w-4 h-4" />
                 </button>
               </div>
 
               <div className="flex items-center justify-between text-[10px] text-slate-400 px-1">
-                <span>Nhấn Enter để gửi, Shift+Enter để xuống dòng</span>
+                <span>
+                  {language === 'vi'
+                    ? 'Nhấn Enter để gửi, Shift+Enter để xuống dòng'
+                    : 'Press Enter to send, Shift+Enter for new line'}
+                </span>
                 <span className="flex items-center gap-1 text-indigo-500 font-medium">
-                  <ShieldCheck className="w-3 h-3" /> Blockchain Knowledge
+                  <ShieldCheck className="w-3 h-3" /> HubBlock AI Knowledge
                 </span>
               </div>
             </div>

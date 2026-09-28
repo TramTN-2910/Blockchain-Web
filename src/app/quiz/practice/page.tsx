@@ -4,9 +4,10 @@ import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft, Check, X, RotateCcw, Sparkles, Award, CheckCircle2 } from 'lucide-react';
-import { ALL_QUESTIONS, QUIZ_TOPICS } from '@/data/quizQuestions';
+import { ALL_QUESTIONS, QUIZ_TOPICS, getShuffledPracticeQuestions } from '@/data/quizQuestions';
 import { Question } from '@/types/quiz';
 import { useQuizStore } from '@/store/useQuizStore';
+import { useAdminStore } from '@/store/useAdminStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SpotlightCard } from '@/components/ui/SpotlightCard';
 
@@ -16,27 +17,28 @@ function PracticeContent() {
   const topicParam = searchParams.get('topic');
   const difficultyParam = searchParams.get('difficulty');
   const { recordPracticeAnswer } = useQuizStore();
+  const adminQuestions = useAdminStore((s) => s.questions);
 
-  // Filter questions according to query params
-  const questions: Question[] = useMemo(() => {
-    let list = ALL_QUESTIONS;
-    if (topicParam) {
-      list = list.filter((q) => q.topic_slug === topicParam);
-    }
-    if (difficultyParam && difficultyParam !== 'all') {
-      list = list.filter((q) => q.difficulty === difficultyParam);
-    }
-    return list.length > 0 ? list : ALL_QUESTIONS;
-  }, [topicParam, difficultyParam]);
-
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [isMounted, setIsMounted] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
   const [sessionCorrectCount, setSessionCorrectCount] = useState(0);
   const [isCompletionModalOpen, setIsCompletionModalOpen] = useState(false);
 
+  // Initialize and randomize questions & ABCD options on mount or param changes
+  useEffect(() => {
+    setIsMounted(true);
+    const randomizedList = getShuffledPracticeQuestions(topicParam, difficultyParam, adminQuestions);
+    setQuestions(randomizedList);
+    setCurrentIndex(0);
+    setSelectedOptionId(null);
+    setSessionCorrectCount(0);
+  }, [topicParam, difficultyParam, adminQuestions]);
+
   const currentQ = questions[currentIndex] || questions[0];
   const totalCount = questions.length;
-  const progressPct = Math.round(((currentIndex + 1) / totalCount) * 100);
+  const progressPct = totalCount > 0 ? Math.round(((currentIndex + 1) / totalCount) * 100) : 0;
 
   // Reset selected option when question changes
   useEffect(() => {
@@ -44,7 +46,7 @@ function PracticeContent() {
   }, [currentIndex]);
 
   const handleSelectOption = (optId: string) => {
-    if (selectedOptionId !== null) return; // Prevent changing after choosing
+    if (selectedOptionId !== null || !currentQ) return; // Prevent changing after choosing
     setSelectedOptionId(optId);
 
     const isCorrect = currentQ.options.find((o) => o.id === optId)?.is_correct ?? false;
@@ -69,6 +71,9 @@ function PracticeContent() {
   };
 
   const handleRestart = () => {
+    // Generate a fresh random set with shuffled options on restart
+    const freshRandomList = getShuffledPracticeQuestions(topicParam, difficultyParam, adminQuestions);
+    setQuestions(freshRandomList);
     setCurrentIndex(0);
     setSelectedOptionId(null);
     setSessionCorrectCount(0);
@@ -89,6 +94,14 @@ function PracticeContent() {
         return 'Dễ';
     }
   };
+
+  if (!isMounted || questions.length === 0 || !currentQ) {
+    return (
+      <div className="min-h-[50vh] flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto py-3 sm:py-4 px-4 space-y-3">

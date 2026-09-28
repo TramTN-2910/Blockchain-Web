@@ -102,9 +102,23 @@ Tài liệu này tổng hợp toàn bộ Yêu cầu Tính năng, Kiến trúc C�
 
 ---
 
-## 📅 3. Kế Hoạch Tiếp Theo (Upcoming Action Plan)
+## 📅 3. Kế Hoạch Tiếp Theo (Upcoming Action Plan - HubBlock V2)
 
-1. **Toàn bộ 31 routes & 7 Modules chính**: Đã hoàn tất 100% kiến trúc, giao diện chuẩn Web3/Fintech, animation Framer Motion, hệ thống câu hỏi trắc nghiệm, nền canvas phi tập trung và trung tâm quản trị Admin.
+1. **Giai đoạn V1 (Hoàn tất 100%)**: Toàn bộ 31 routes & 7 Modules nền tảng đã hoàn thành (Hash, Mining PoW, RSA Math, Quiz 40 câu, Spaced Repetition, Mistral AI Parser, Admin Suite).
+2. **Giai đoạn V2 (Kế hoạch nâng cấp 10 Module Vòng đời Giao dịch)**:
+   - Chi tiết đầy đủ tại tài liệu: [docs/PROJECT_UPDATE.md](file:///d:/Projects/Blockchain/docs/PROJECT_UPDATE.md).
+   - Triển khai phân hệ **Vòng đời Giao dịch (`/lifecycle/...`)** gồm 10 bước:
+     1. `Wallet & Faucet (ECDSA / secp256k1)`
+     2. `Transaction & Digital Signature (Ký số & Phát tán)`
+     3. `Deep SHA-256 Cryptography (6 bước nén & Ma trận thuật toán)`
+     4. `Visual Merkle Root (Cây nhị phân tự cân bằng)`
+     5. `Block Header & Body Assembly (Coinbase & Tx packaging)`
+     6. `P2P Network Topology & Gossip Protocol (Độ trễ & Lan truyền)`
+     7. `Mempool Priority Queue (Sắp xếp theo Gas Fee)`
+     8. `Interactive 2-Block Handshake (Neon Link Animation)`
+     9. `Proof of Stake Simulation (Weighted Lottery & Slashing)`
+     10. `Tamper Detection & Chain Re-mining (Phát hiện gian lận & Đào lại chuỗi)`
+   - Xây dựng Global Store `useBlockchainLifecycleStore` (Zustand) hỗ trợ 2 chế độ: **Guided Journey** (Chạy theo kịch bản) và **Interactive Sandbox** (Thực hành tự do từng module).
 
 
 ---

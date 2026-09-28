@@ -130,6 +130,23 @@ export async function signInWithGoogleOAuth(): Promise<{ error: string | null }>
 }
 
 /**
+ * Send password reset email
+ */
+export async function sendPasswordResetEmail(email: string): Promise<{ success: boolean; error: string | null }> {
+  try {
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: typeof window !== 'undefined' ? `${window.location.origin}/login` : undefined,
+    });
+    if (error) {
+      return { success: false, error: error.message };
+    }
+    return { success: true, error: null };
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'Lỗi gửi yêu cầu đặt lại mật khẩu.' };
+  }
+}
+
+/**
  * Sign out current user
  */
 export async function signOutSupabase(): Promise<void> {
