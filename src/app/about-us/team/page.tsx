@@ -29,34 +29,64 @@ interface TeamMember {
 
 const MEMBERS: TeamMember[] = [
   {
-    name: 'Trương Ngọc Trâm',
-    id: '050608220268',
-    roleVi: 'Trưởng Nhóm • Kiến Trúc Sư Hệ Thống',
-    roleEn: 'Team Lead • System Architect',
-    tasksVi: 'Thiết kế kiến trúc hệ thống, phát triển lõi mô phỏng Blockchain, đồng thuận PoS và P2P Network.',
-    tasksEn: 'System architecture design, Blockchain simulation core, PoS consensus engine, and P2P Network.',
-    color: 'from-purple-500 to-indigo-500',
-    avatarText: 'TNT'
+    name: 'Trần Thị Tuyết Nga',
+    id: '031340240018',
+    roleVi: 'Nghiên Cứu Mật Mã Học & Chữ Ký Số',
+    roleEn: 'Cryptography & Digital Signatures Researcher',
+    tasksVi: 'Phụ trách Hash/SHA-256 (tạo hash, thay đổi dữ liệu so sánh), Chữ ký số Digital Signature (ký bằng khóa riêng) và Xác minh chữ ký Signature Verification (khóa công khai).',
+    tasksEn: 'In charge of Hash/SHA-256 (data hashing & comparison), Digital Signature (private key signing), and Signature Verification (public key verification).',
+    color: 'from-pink-500 to-rose-500',
+    avatarText: 'TN'
   },
   {
-    name: 'Thành viên Nghiên Cứu 2',
-    id: '050608220xxx',
-    roleVi: 'Kỹ Sư Mật Mã & Labs',
-    roleEn: 'Crypto & Lab Engineer',
-    tasksVi: 'Phát triển Crypto Lab, thuật toán ECDSA, RSA, SHA-256 và Merkle Tree visualizer.',
-    tasksEn: 'Crypto Lab development, ECDSA, RSA, SHA-256 algorithms, and Merkle Tree visualization.',
-    color: 'from-blue-500 to-cyan-500',
-    avatarText: 'MB2'
+    name: 'Hoàng Nhật Minh',
+    id: '031340240017',
+    roleVi: 'Nghiên Cứu Đồng Thuận & An Ninh Mạng',
+    roleEn: 'Consensus & Security Engineer',
+    tasksVi: 'Phụ trách Cơ chế đồng thuận Proof of Stake - PoS (Validator xác nhận Block) và Phát hiện can thiệp Tamper Detection (sửa đổi dữ liệu, phát hiện thay đổi chuỗi).',
+    tasksEn: 'In charge of Proof of Stake (PoS) consensus (validator selection & block validation) and Tamper Detection (tampering simulation & change detection).',
+    color: 'from-amber-500 to-orange-500',
+    avatarText: 'NM'
   },
   {
-    name: 'Thành viên Nghiên Cứu 3',
-    id: '050608220yyy',
-    roleVi: 'Kỹ Sư Frontend UI/UX',
-    roleEn: 'Frontend & UI/UX Specialist',
-    tasksVi: 'Thiết kế giao diện Neon Glassmorphism, animations tương tác và hệ thống trắc nghiệm Quiz.',
-    tasksEn: 'Neon Glassmorphism UI design, interactive micro-animations, and Quiz testing module.',
+    name: 'Phạm Nguyễn Gia Phúc',
+    id: '031340240044',
+    roleVi: 'Kỹ Sư Ví & Giao Dịch Blockchain',
+    roleEn: 'Wallet & Transaction Engineer',
+    tasksVi: 'Phụ trách Ví Wallet (quy trình tạo, quản lý ví và tương tác) và Giao dịch Transaction (mô phỏng tạo giao dịch, cấu trúc dữ liệu TX).',
+    tasksEn: 'In charge of Wallet (creation, management & interaction workflows) and Transaction (transaction creation simulation & TX data structures).',
+    color: 'from-indigo-500 to-purple-500',
+    avatarText: 'GP'
+  },
+  {
+    name: 'Huỳnh Thanh Phong',
+    id: '031340240023',
+    roleVi: 'Kỹ Sư Mạng P2P & Hàng Đợi Giao Dịch',
+    roleEn: 'P2P Network & Mempool Engineer',
+    tasksVi: 'Phụ trách Mempool (giao dịch chờ xử lý trước khi vào Block) và Mạng Network (nhiều node kết nối, truyền tải và trao đổi dữ liệu trong mạng Blockchain).',
+    tasksEn: 'In charge of Mempool (pending transaction queue before block inclusion) and P2P Network (multi-node connectivity, data exchange & propagation).',
+    color: 'from-cyan-500 to-blue-500',
+    avatarText: 'TP'
+  },
+  {
+    name: 'Nguyễn Quang Vinh',
+    id: '031340240039',
+    roleVi: 'Kỹ Sư Lõi Sổ Cái & Liên Kết Khối',
+    roleEn: 'Ledger Core & Block Linkage Engineer',
+    tasksVi: 'Phụ trách Liên kết Previous Hash (xâu chuỗi các khối bằng hash khối trước) và Sổ cái Blockchain (chuỗi nhiều khối, kiểm tra tính toàn vẹn liên kết).',
+    tasksEn: 'In charge of Previous Hash (block linkage via parent block hash) and Blockchain Ledger (multi-block chain simulation & integrity verification).',
     color: 'from-emerald-500 to-teal-500',
-    avatarText: 'MB3'
+    avatarText: 'QV'
+  },
+  {
+    name: 'Lê Minh Thư',
+    id: '031340240030',
+    roleVi: 'Kỹ Sư Cấu Trúc Khối & Cây Merkle',
+    roleEn: 'Block Anatomy & Merkle Tree Engineer',
+    tasksVi: 'Phụ trách Cấu trúc Block (quá trình đóng gói và tạo Block mới) và Cây Merkle Tree (gom nhóm nhiều giao dịch và tính toán Merkle Root).',
+    tasksEn: 'In charge of Block Anatomy (block structure & block creation process) and Merkle Tree (grouping transactions & Merkle Root computation).',
+    color: 'from-violet-500 to-fuchsia-500',
+    avatarText: 'MT'
   }
 ];
 

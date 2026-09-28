@@ -18,58 +18,128 @@ interface TaskAssignment {
   tasksVi: string;
   tasksEn: string;
   assignee: string;
+  assigneeId?: string;
+  peopleCount: number;
   progress: number;
-  weight: string;
 }
 
 const TASK_LIST: TaskAssignment[] = [
   {
-    module: 'Kiến Trúc & Navigation',
-    tasksVi: 'Tái cấu trúc 7 chuyên mục, thanh điều hướng ngang Sub-nav, tích hợp Dark/Light theme & Đa ngôn ngữ.',
-    tasksEn: 'Restructure into 7 main categories, sliding horizontal sub-nav, Dark/Light theme & i18n support.',
-    assignee: 'Trương Ngọc Trâm',
-    progress: 100,
-    weight: '15%'
+    module: 'Wallet',
+    tasksVi: 'Thiết kế quy trình tạo/quản lý ví và tương tác',
+    tasksEn: 'Design wallet creation, management, and interaction flows',
+    assignee: 'Phạm Nguyễn Gia Phúc',
+    assigneeId: '031340240044',
+    peopleCount: 1,
+    progress: 100
   },
   {
-    module: 'Crypto Lab (Mật Mã Học)',
-    tasksVi: 'Xây dựng trình tạo ví BIP-39, băm SHA-256, ký & xác minh chữ ký điện tử ECDSA secp256k1.',
-    tasksEn: 'BIP-39 seed generation, SHA-256 hashing, ECDSA secp256k1 sign & verification labs.',
-    assignee: 'Thành viên 2',
-    progress: 100,
-    weight: '20%'
+    module: 'Transaction',
+    tasksVi: 'Mô phỏng tạo giao dịch và dữ liệu giao dịch',
+    tasksEn: 'Simulate transaction creation and TX data structures',
+    assignee: 'Phạm Nguyễn Gia Phúc',
+    assigneeId: '031340240044',
+    peopleCount: 1,
+    progress: 100
   },
   {
-    module: 'Blockchain Simulation',
-    tasksVi: 'Mô phỏng Giao dịch, Mempool hàng đợi, Cây Merkle Tree, Liên kết Previous Hash, Đồng thuận PoS & Explorer.',
-    tasksEn: 'Transaction builder, Mempool queue, Merkle Tree builder, Previous Hash linkage, PoS & Explorer.',
-    assignee: 'Trương Ngọc Trâm',
-    progress: 100,
-    weight: '25%'
+    module: 'Hash / SHA-256',
+    tasksVi: 'Mô phỏng tạo Hash và thay đổi dữ liệu để so sánh',
+    tasksEn: 'Simulate Hash generation and data variation comparison',
+    assignee: 'Trần Thị Tuyết Nga',
+    assigneeId: '031340240018',
+    peopleCount: 1,
+    progress: 100
   },
   {
-    module: 'Mô Phỏng Tấn Công (Attack Sim)',
-    tasksVi: 'Giả mạo TX trong Mempool, Can thiệp thân khối, Hiệu ứng thác đổ Avalanche Diff, Cascade Validator & Re-mining 51%.',
-    tasksEn: 'Tamper TX in mempool, Block data injection, Avalanche Diff analyzer, Cascade Validator & 51% Re-mining.',
-    assignee: 'Trương Ngọc Trâm & TV 2',
-    progress: 100,
-    weight: '15%'
+    module: 'Digital Signature',
+    tasksVi: 'Mô phỏng ký giao dịch bằng khóa riêng',
+    tasksEn: 'Simulate transaction signing with private key',
+    assignee: 'Trần Thị Tuyết Nga',
+    assigneeId: '031340240018',
+    peopleCount: 1,
+    progress: 100
   },
   {
-    module: 'Mạng Lưới P2P & Nodes',
-    tasksVi: 'Sơ đồ Mesh Topology SVG, Ma trận kết nối Peer, Giao thức lan truyền Gossip, Đồng bộ khối & Logs console.',
-    tasksEn: 'SVG Mesh Topology, Peer Connection Matrix, Gossip broadcast flooding, State sync & Logs console.',
-    assignee: 'Trương Ngọc Trâm',
-    progress: 100,
-    weight: '15%'
+    module: 'Signature Verification',
+    tasksVi: 'Mô phỏng xác minh chữ ký bằng khóa công khai',
+    tasksEn: 'Simulate signature verification using public key',
+    assignee: 'Trần Thị Tuyết Nga',
+    assigneeId: '031340240018',
+    peopleCount: 1,
+    progress: 100
   },
   {
-    module: 'UI/UX & Hệ Thống Quiz',
-    tasksVi: 'Thiết kế Neon Glassmorphism, Micro-animations Framer Motion, Ngân hàng câu hỏi trắc nghiệm & Admin AI Import.',
-    tasksEn: 'Neon Glassmorphism UI, Framer Motion animations, Quiz question bank & Admin AI Import tool.',
-    assignee: 'Thành viên 3',
-    progress: 100,
-    weight: '10%'
+    module: 'Mempool',
+    tasksVi: 'Mô phỏng giao dịch chờ xử lý trước khi vào Block',
+    tasksEn: 'Simulate pending transaction pool before block packing',
+    assignee: 'Huỳnh Thanh Phong',
+    assigneeId: '031340240023',
+    peopleCount: 1,
+    progress: 100
+  },
+  {
+    module: 'Network',
+    tasksVi: 'Mô phỏng nhiều node kết nối và trao đổi dữ liệu trong mạng Blockchain',
+    tasksEn: 'Simulate multi-node mesh connections & network data exchange',
+    assignee: 'Huỳnh Thanh Phong',
+    assigneeId: '031340240023',
+    peopleCount: 1,
+    progress: 100
+  },
+  {
+    module: 'Merkle Tree',
+    tasksVi: 'Mô phỏng gom nhiều giao dịch và tạo Merkle Root',
+    tasksEn: 'Simulate batching transactions & Merkle Root generation',
+    assignee: 'Lê Minh Thư',
+    assigneeId: '031340240030',
+    peopleCount: 1,
+    progress: 100
+  },
+  {
+    module: 'Block',
+    tasksVi: 'Mô phỏng cấu trúc và quá trình tạo Block',
+    tasksEn: 'Simulate block structure anatomy and block generation process',
+    assignee: 'Lê Minh Thư',
+    assigneeId: '031340240030',
+    peopleCount: 1,
+    progress: 100
+  },
+  {
+    module: 'Previous Hash',
+    tasksVi: 'Mô phỏng liên kết Block bằng Previous Hash',
+    tasksEn: 'Simulate cryptographically linking blocks via Previous Hash',
+    assignee: 'Nguyễn Quang Vinh',
+    assigneeId: '031340240039',
+    peopleCount: 1,
+    progress: 100
+  },
+  {
+    module: 'Blockchain',
+    tasksVi: 'Mô phỏng chuỗi nhiều Block và kiểm tra liên kết',
+    tasksEn: 'Simulate multi-block chain ledger and integrity verification',
+    assignee: 'Nguyễn Quang Vinh',
+    assigneeId: '031340240039',
+    peopleCount: 1,
+    progress: 100
+  },
+  {
+    module: 'Proof of Stake (PoS)',
+    tasksVi: 'Mô phỏng Validator được chọn để xác nhận Block',
+    tasksEn: 'Simulate validator selection & block validation in PoS',
+    assignee: 'Hoàng Nhật Minh',
+    assigneeId: '031340240017',
+    peopleCount: 1,
+    progress: 100
+  },
+  {
+    module: 'Tamper Detection',
+    tasksVi: 'Mô phỏng sửa dữ liệu và phát hiện thay đổi',
+    tasksEn: 'Simulate data tampering & blockchain alteration detection',
+    assignee: 'Hoàng Nhật Minh',
+    assigneeId: '031340240017',
+    peopleCount: 1,
+    progress: 100
   }
 ];
 
@@ -90,12 +160,12 @@ export default function TaskAssignmentsPage() {
             </span>
           </div>
           <h1 className="text-2xl md:text-3xl font-extrabold text-white">
-            {language === 'vi' ? 'Ma Trận Phân Công Công Việc & Tiến Độ (WBS)' : 'Work Breakdown Structure & Tasks'}
+            {language === 'vi' ? 'Tổng Hợp Các Chức Năng Cần Có Của Blockchain' : 'Blockchain Core Functions & Task Matrix'}
           </h1>
           <p className="text-xs md:text-sm text-slate-300 mt-1">
             {language === 'vi'
-              ? 'Chi tiết bảng phân bổ hạng mục nghiên cứu, trọng số đóng góp và tình trạng hoàn thành 100% của đề tài.'
-              : 'Detailed breakdown of research modules, contribution weights, and milestone completion status.'}
+              ? 'Bảng phân công chi tiết 13 module chức năng cốt lõi cho 6 thành viên nghiên cứu (Deadline: 26/9/2026).'
+              : 'Detailed breakdown of 13 core functional modules assigned to 6 research members (Deadline: Sep 26, 2026).'}
           </p>
         </div>
 
@@ -117,8 +187,8 @@ export default function TaskAssignmentsPage() {
             <CheckSquare className="w-6 h-6" />
           </div>
           <div>
-            <div className="text-xs text-slate-400">{language === 'vi' ? 'Tổng Số Hạng Mục' : 'Total Modules'}</div>
-            <div className="text-xl font-black text-white">6 Hạng Mục Lớn</div>
+            <div className="text-xs text-slate-400">{language === 'vi' ? 'Tổng Số Chức Năng' : 'Total Functions'}</div>
+            <div className="text-xl font-black text-white">13 Chức Năng Cốt Lõi</div>
           </div>
         </div>
 
@@ -127,7 +197,7 @@ export default function TaskAssignmentsPage() {
             <CheckCircle2 className="w-6 h-6" />
           </div>
           <div>
-            <div className="text-xs text-slate-400">{language === 'vi' ? 'Tiến Độ Tổng Thể' : 'Overall Progress'}</div>
+            <div className="text-xs text-slate-400">{language === 'vi' ? 'Tiến Độ Đề Tài' : 'Overall Progress'}</div>
             <div className="text-xl font-black text-emerald-400">100% Hoàn Thành</div>
           </div>
         </div>
@@ -137,39 +207,52 @@ export default function TaskAssignmentsPage() {
             <Award className="w-6 h-6" />
           </div>
           <div>
-            <div className="text-xs text-slate-400">{language === 'vi' ? 'Đánh Giá Đạt Chuẩn' : 'Milestone Score'}</div>
-            <div className="text-xl font-black text-blue-300">Grade A+ (Xuất sắc)</div>
+            <div className="text-xs text-slate-400">{language === 'vi' ? 'Thành Viên Thực Hiện' : 'Team Members'}</div>
+            <div className="text-xl font-black text-blue-300">6 Sinh Viên</div>
           </div>
         </div>
       </div>
 
-      {/* Task Matrix Table */}
+      {/* Task Matrix Table matching Image 1 */}
       <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-4">
-        <h2 className="text-base font-bold text-white flex items-center gap-2">
-          <Layers className="w-5 h-5 text-purple-400" />
-          {language === 'vi' ? 'Bảng Chi Tiết Phân Công Nhiệm Vụ' : 'Detailed Task Matrix'}
-        </h2>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <h2 className="text-base font-bold text-white flex items-center gap-2">
+            <Layers className="w-5 h-5 text-purple-400" />
+            <span>{language === 'vi' ? 'Bảng Phân Công Nhiệm Vụ (WBS Matrix)' : 'WBS Task Matrix Table'}</span>
+          </h2>
+        </div>
 
         <div className="overflow-x-auto">
           <table className="w-full border-collapse text-xs">
             <thead>
-              <tr className="border-b border-slate-800 text-slate-400 text-left uppercase text-[10px] tracking-wider">
-                <th className="p-3">Hạng Mục</th>
+              <tr className="border-b border-slate-800 text-slate-400 text-left uppercase text-[10px] tracking-wider bg-slate-950/40">
+                <th className="p-3">Chức Năng</th>
                 <th className="p-3">Nội Dung Thực Hiện</th>
-                <th className="p-3">Phụ Trách</th>
-                <th className="p-3 text-center">Trọng Số</th>
+                <th className="p-3 text-center">Số Lượng Phụ Trách</th>
+                <th className="p-3">Người Phụ Trách</th>
                 <th className="p-3 text-right">Trạng Thái</th>
               </tr>
             </thead>
             <tbody>
               {TASK_LIST.map((item, idx) => (
                 <tr key={idx} className="border-b border-slate-800/60 hover:bg-slate-800/30 transition-colors">
-                  <td className="p-3 font-bold text-white whitespace-nowrap">{item.module}</td>
-                  <td className="p-3 text-slate-300">
+                  <td className="p-3 font-bold text-white whitespace-nowrap">
+                    <span className="px-2.5 py-1 rounded-lg bg-slate-800/80 text-purple-300 font-mono border border-slate-700/80 text-xs">
+                      {item.module}
+                    </span>
+                  </td>
+                  <td className="p-3 text-slate-200">
                     {language === 'vi' ? item.tasksVi : item.tasksEn}
                   </td>
-                  <td className="p-3 font-mono text-purple-300 whitespace-nowrap">{item.assignee}</td>
-                  <td className="p-3 text-center font-mono text-cyan-300 font-bold">{item.weight}</td>
+                  <td className="p-3 text-center font-mono font-bold text-cyan-400">
+                    {item.peopleCount}
+                  </td>
+                  <td className="p-3 whitespace-nowrap">
+                    <div className="font-semibold text-white">{item.assignee}</div>
+                    {item.assigneeId && (
+                      <div className="text-[10px] font-mono text-purple-400">{item.assigneeId}</div>
+                    )}
+                  </td>
                   <td className="p-3 text-right">
                     <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold border border-emerald-500/30">
                       <CheckCircle2 className="w-3 h-3" />
