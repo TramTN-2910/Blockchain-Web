@@ -2,6 +2,11 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { Question, QuizTopic } from '@/types/quiz';
 import { ALL_QUESTIONS, QUIZ_TOPICS } from '@/data/quizQuestions';
+import {
+  getUsersFromSupabase,
+  updateUserRoleInSupabase,
+  getAttemptsFromSupabase,
+} from '@/lib/supabase/users';
 
 export interface AdminUser {
   id: string;
@@ -26,111 +31,12 @@ export interface AdminAttempt {
   completedAt: string;
 }
 
-const INITIAL_USERS: AdminUser[] = [
-  {
-    id: 'user-admin-1',
-    name: 'HUB Block Master',
-    email: 'admin@hubblock.edu.vn',
-    role: 'admin',
-    joinedAt: '2025-01-10',
-    quizzesTaken: 28,
-    avgScore: 96.5,
-    lastActive: 'Vừa xong',
-  },
-  {
-    id: 'user-2',
-    name: 'Nguyễn Văn An',
-    email: 'an.nguyen@hub.edu.vn',
-    role: 'user',
-    joinedAt: '2025-02-14',
-    quizzesTaken: 12,
-    avgScore: 84.0,
-    lastActive: '2 giờ trước',
-  },
-  {
-    id: 'user-3',
-    name: 'Trần Thị Mai',
-    email: 'mai.tran@hub.edu.vn',
-    role: 'user',
-    joinedAt: '2025-02-20',
-    quizzesTaken: 8,
-    avgScore: 78.5,
-    lastActive: 'Hôm qua',
-  },
-  {
-    id: 'user-4',
-    name: 'Lê Hoàng Long',
-    email: 'long.le@gmail.com',
-    role: 'user',
-    joinedAt: '2025-03-01',
-    quizzesTaken: 15,
-    avgScore: 90.0,
-    lastActive: '3 ngày trước',
-  },
-  {
-    id: 'user-5',
-    name: 'Phạm Minh Đức',
-    email: 'duc.pham@hub.edu.vn',
-    role: 'user',
-    joinedAt: '2025-03-05',
-    quizzesTaken: 4,
-    avgScore: 65.0,
-    lastActive: '5 ngày trước',
-  },
-];
-
-const INITIAL_ATTEMPTS: AdminAttempt[] = [
-  {
-    id: 'att-1',
-    userId: 'user-2',
-    userName: 'Nguyễn Văn An',
-    quizTitle: 'Đề thi trắc nghiệm tổng hợp 40 câu',
-    score: 36,
-    totalQuestions: 40,
-    passed: true,
-    durationSeconds: 2450,
-    completedAt: '18/09/2026 13:45',
-  },
-  {
-    id: 'att-2',
-    userId: 'user-4',
-    userName: 'Lê Hoàng Long',
-    quizTitle: 'Kiểm tra Hàm băm SHA-256 & Avalanche',
-    score: 18,
-    totalQuestions: 20,
-    passed: true,
-    durationSeconds: 1120,
-    completedAt: '18/09/2026 11:20',
-  },
-  {
-    id: 'att-3',
-    userId: 'user-3',
-    userName: 'Trần Thị Mai',
-    quizTitle: 'Mật mã học RSA & Khóa công khai',
-    score: 14,
-    totalQuestions: 20,
-    passed: false,
-    durationSeconds: 1350,
-    completedAt: '17/09/2026 16:30',
-  },
-  {
-    id: 'att-4',
-    userId: 'user-5',
-    userName: 'Phạm Minh Đức',
-    quizTitle: 'Độ khó đào & Cơ chế đồng thuận PoW',
-    score: 11,
-    totalQuestions: 15,
-    passed: true,
-    durationSeconds: 980,
-    completedAt: '16/09/2026 09:15',
-  },
-];
-
 interface AdminState {
   questions: Question[];
   topics: QuizTopic[];
   users: AdminUser[];
   attempts: AdminAttempt[];
+  isLoadingUsers: boolean;
   
   // Question Actions
   addQuestion: (question: Omit<Question, 'id'>) => Question;
@@ -146,7 +52,9 @@ interface AdminState {
   resetToDefaultTopics: () => void;
 
   // User Actions
-  updateUserRole: (userId: string, role: 'admin' | 'user') => void;
+  fetchUsers: () => Promise<void>;
+  fetchAttempts: () => Promise<void>;
+  updateUserRole: (userId: string, role: 'admin' | 'user') => Promise<{ success: boolean; error?: string }>;
   deleteUser: (userId: string) => void;
   
   exportQuestionsJSON: () => string;
@@ -158,8 +66,9 @@ export const useAdminStore = create<AdminState>()(
     (set, get) => ({
       questions: ALL_QUESTIONS,
       topics: QUIZ_TOPICS,
-      users: INITIAL_USERS,
-      attempts: INITIAL_ATTEMPTS,
+      users: [],
+      attempts: [],
+      isLoadingUsers: false,
 
       // QUESTIONS CRUD
       addQuestion: (newQ) => {
@@ -232,7 +141,6 @@ export const useAdminStore = create<AdminState>()(
       updateTopic: (slug, updated) => {
         set((state) => ({
           topics: state.topics.map((t) => (t.slug === slug ? { ...t, ...updated } : t)),
-          // If name updated, also sync topic_name_vn in existing questions of this topic
           questions: updated.name_vn
             ? state.questions.map((q) => (q.topic_slug === slug ? { ...q, topic_name_vn: updated.name_vn! } : q))
             : state.questions,
@@ -260,11 +168,49 @@ export const useAdminStore = create<AdminState>()(
         set({ topics: QUIZ_TOPICS });
       },
 
-      // USERS
-      updateUserRole: (userId, role) => {
+      // USERS - DATABASE SYNC
+      fetchUsers: async () => {
+        set({ isLoadingUsers: true });
+        try {
+          const dbUsers = await getUsersFromSupabase();
+          if (dbUsers && dbUsers.length > 0) {
+            set({ users: dbUsers, isLoadingUsers: false });
+          } else {
+            set({ isLoadingUsers: false });
+          }
+        } catch (e) {
+          console.error('Lỗi tải danh sách người dùng:', e);
+          set({ isLoadingUsers: false });
+        }
+      },
+
+      fetchAttempts: async () => {
+        try {
+          const dbAttempts = await getAttemptsFromSupabase();
+          if (dbAttempts) {
+            set({ attempts: dbAttempts });
+          }
+        } catch (e) {
+          console.error('Lỗi tải lịch sử thi:', e);
+        }
+      },
+
+      updateUserRole: async (userId, role) => {
+        // Optimistic UI update
         set((state) => ({
           users: state.users.map((u) => (u.id === userId ? { ...u, role } : u)),
         }));
+
+        const res = await updateUserRoleInSupabase(userId, role);
+        if (!res.success) {
+          // Rollback on error
+          const prevRole = role === 'admin' ? 'user' : 'admin';
+          set((state) => ({
+            users: state.users.map((u) => (u.id === userId ? { ...u, role: prevRole } : u)),
+          }));
+          return { success: false, error: res.error || 'Lỗi cập nhật CSDL' };
+        }
+        return { success: true };
       },
 
       deleteUser: (userId) => {

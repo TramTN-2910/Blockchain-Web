@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, ShieldCheck } from 'lucide-react';
 import { SpotlightCard } from '@/components/ui/SpotlightCard';
 import { useTranslation } from '@/lib/i18n/useTranslation';
 
@@ -109,7 +109,7 @@ function MemberCard({ member, isEn }: { member: Member; isEn: boolean }) {
       <div className="absolute -inset-0.5 rounded-3xl bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 opacity-20 blur-md group-hover:opacity-100 group-hover:blur-lg transition-all duration-500 pointer-events-none" />
 
       {/* Card Inner Surface */}
-      <SpotlightCard className="relative h-full rounded-3xl p-6 bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-xl border border-purple-100/80 dark:border-slate-800 shadow-xl shadow-purple-500/5 flex flex-col justify-between" spotlightColor="rgba(168, 85, 247, 0.18)">
+      <SpotlightCard className="relative h-full rounded-3xl p-6 bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-xl border border-purple-100/80 dark:border-slate-800 shadow-sm flex flex-col justify-between" spotlightColor="rgba(168, 85, 247, 0.18)">
         <div className="space-y-4 relative z-10">
           {/* Top row: Avatar on Left, Name & MSSV on Right */}
           <div className="flex items-center gap-4">
@@ -172,8 +172,28 @@ export default function TeamSection() {
 
   return (
     <section className="space-y-8">
-      {/* Section Header */}
-      <div className="space-y-2">
+      
+      {/* TEACHER / ADVISOR CARD (CLEAN & MINIMAL) */}
+      <SpotlightCard className="p-5 md:p-6 rounded-3xl bg-white/95 dark:bg-[#0f172a]/95 border border-amber-300/70 dark:border-amber-500/30 shadow-md backdrop-blur-xl" spotlightColor="rgba(245, 158, 11, 0.16)">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500 via-orange-500 to-purple-600 flex items-center justify-center text-white font-black text-xl shadow-md shadow-amber-500/20 shrink-0">
+            Đ
+          </div>
+          <div className="min-w-0 flex-1 space-y-0.5">
+            <div className="text-lg md:text-xl font-black text-slate-900 dark:text-white tracking-tight">
+              {team.advisor_name || (isEn ? 'Dr. Nguyen Hoai Duc' : 'TS. Nguyễn Hoài Đức')}
+            </div>
+            <div className="text-xs md:text-sm font-medium text-slate-600 dark:text-purple-200/90 leading-relaxed">
+              {team.advisor_dept || (isEn
+                ? 'Faculty of Data Science in Business — Ho Chi Minh University of Banking (HUB)'
+                : 'Khoa Khoa học Dữ liệu trong Kinh doanh — Trường Đại học Ngân hàng TP.HCM (HUB)')}
+            </div>
+          </div>
+        </div>
+      </SpotlightCard>
+
+      {/* Section Header: Student Team */}
+      <div className="space-y-2 pt-2">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800/80">
           <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
           <span>{team.members_badge || 'Core Engineering Team'}</span>

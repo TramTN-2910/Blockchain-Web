@@ -1,14 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShieldCheck } from 'lucide-react';
+import { ShieldCheck, Lock, LogIn, Sparkles, Loader2, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 import AdminDashboardTab from '@/components/admin/AdminDashboardTab';
 import AdminQuestionsTab from '@/components/admin/AdminQuestionsTab';
 import AdminTopicsTab from '@/components/admin/AdminTopicsTab';
 import AdminAIImportTab from '@/components/admin/AdminAIImportTab';
 import AdminUsersTab from '@/components/admin/AdminUsersTab';
+import { useAuthStore } from '@/store/useAuthStore';
+import { SpotlightCard } from '@/components/ui/SpotlightCard';
 
 type AdminTab = 'dashboard' | 'questions' | 'topics' | 'ai-import' | 'users';
 
@@ -37,6 +40,64 @@ const ADMIN_TABS = [
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<AdminTab>('dashboard');
+  const [mounted, setMounted] = useState(false);
+  const { user, isLoggedIn, isLoading, isInitialized, initAuth } = useAuthStore();
+
+  useEffect(() => {
+    setMounted(true);
+    initAuth();
+  }, [initAuth]);
+
+  if (!mounted || (isLoading && !isInitialized)) {
+    return (
+      <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-4">
+        <Loader2 className="w-10 h-10 text-indigo-600 animate-spin" />
+        <p className="text-xs text-slate-500 font-medium">Đang kiểm tra quyền truy cập Admin...</p>
+      </div>
+    );
+  }
+
+  // Access Control: Must be logged in as admin
+  const isAdmin = isLoggedIn && user?.role === 'admin';
+
+  if (!isAdmin) {
+    return (
+      <div className="max-w-lg mx-auto py-16 px-4">
+        <SpotlightCard className="p-8 rounded-3xl bg-white/95 dark:bg-slate-900/95 border border-purple-200 dark:border-purple-900/60 shadow-2xl text-center space-y-6" spotlightColor="rgba(168, 85, 247, 0.16)">
+          <div className="w-16 h-16 rounded-2xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center mx-auto shadow-md">
+            <Lock className="w-8 h-8" />
+          </div>
+
+          <div className="space-y-2">
+            <h1 className="text-2xl font-black text-slate-900 dark:text-white">
+              Yêu Cầu Quyền Quản Trị Viên
+            </h1>
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              Trang này chỉ dành riêng cho Quản trị viên (Admin) để quản lý ngân hàng câu hỏi, chủ đề và người dùng. Vui lòng đăng nhập với tài khoản Admin để tiếp tục.
+            </p>
+          </div>
+
+          <div className="pt-2 flex flex-col gap-3">
+            <Link
+              href="/login?redirect=/admin"
+              className="flex items-center justify-center gap-2 py-3 px-6 rounded-xl font-bold text-white bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:opacity-95 shadow-lg shadow-purple-500/25 transition-all text-xs"
+            >
+              <LogIn className="w-4 h-4" />
+              <span>Đăng Nhập Tài Khoản Admin</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+
+            <Link
+              href="/intro/overview"
+              className="py-2.5 px-4 rounded-xl font-semibold text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+            >
+              Quay về Trang Chủ
+            </Link>
+          </div>
+        </SpotlightCard>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 space-y-8 min-h-screen">

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -19,11 +19,14 @@ import {
   ArrowRight,
   Clock,
   CheckCircle2,
+  Database,
 } from 'lucide-react';
 import { SpotlightCard } from '@/components/ui/SpotlightCard';
-import { QUIZ_TOPICS } from '@/data/quizQuestions';
+import { QUIZ_TOPICS, ALL_QUESTIONS } from '@/data/quizQuestions';
 import { useQuizStore } from '@/store/useQuizStore';
-import { TestResult } from '@/types/quiz';
+import { useAdminStore } from '@/store/useAdminStore';
+import { getQuestionsFromSupabase, getTopicsFromSupabase } from '@/lib/supabase/questions';
+import { TestResult, QuizTopic } from '@/types/quiz';
 import { useTranslation } from '@/lib/i18n/useTranslation';
 
 export default function QuizMainPage() {
@@ -34,6 +37,71 @@ export default function QuizMainPage() {
 
   const [activeTab, setActiveTab] = useState<'practice' | 'test'>('practice');
   const { topicStats, testHistory = [], lastTestResult } = useQuizStore();
+  const { questions: storeQuestions, topics: storeTopics, bulkAddQuestions } = useAdminStore();
+
+  const [dbQuestions, setDbQuestions] = useState(storeQuestions || []);
+  const [dbTopics, setDbTopics] = useState<QuizTopic[]>(storeTopics && storeTopics.length > 0 ? storeTopics : QUIZ_TOPICS);
+  const [isLoadingDb, setIsLoadingDb] = useState(false);
+
+  // Sync with Supabase Database on mount
+  useEffect(() => {
+    let isMounted = true;
+    async function loadFromDb() {
+      setIsLoadingDb(true);
+      try {
+        const [fetchedQuestions, fetchedTopics] = await Promise.all([
+          getQuestionsFromSupabase('all'),
+          getTopicsFromSupabase(),
+        ]);
+        if (isMounted) {
+          if (fetchedQuestions && fetchedQuestions.length > 0) {
+            setDbQuestions(fetchedQuestions);
+          }
+          if (fetchedTopics && fetchedTopics.length > 0) {
+            setDbTopics(fetchedTopics);
+          }
+        }
+      } catch (e) {
+        console.warn('Lỗi tải dữ liệu câu hỏi từ CSDL:', e);
+      } finally {
+        if (isMounted) setIsLoadingDb(false);
+      }
+    }
+
+    loadFromDb();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Compute live question list: prefer DB fetched questions or Store questions or Fallback
+  const activeQuestions = useMemo(() => {
+    if (dbQuestions && dbQuestions.length > 0) return dbQuestions;
+    if (storeQuestions && storeQuestions.length > 0) return storeQuestions;
+    return ALL_QUESTIONS;
+  }, [dbQuestions, storeQuestions]);
+
+  const totalQuestionsCount = activeQuestions.length;
+
+  // Compute dynamic topics with live counts from Database
+  const computedTopics = useMemo(() => {
+    const baseTopics = dbTopics && dbTopics.length > 0 ? dbTopics : QUIZ_TOPICS;
+    return baseTopics.map((topic) => {
+      const topicQuestions = activeQuestions.filter((q) => q.topic_slug === topic.slug);
+      const total = topicQuestions.length;
+      const easy = topicQuestions.filter((q) => q.difficulty === 'easy').length;
+      const medium = topicQuestions.filter((q) => q.difficulty === 'medium').length;
+      const hard = topicQuestions.filter((q) => q.difficulty === 'hard').length;
+
+      return {
+        ...topic,
+        total_questions: total > 0 ? total : (topic.total_questions || 0),
+        easy_count: total > 0 ? easy : (topic.easy_count || 0),
+        medium_count: total > 0 ? medium : (topic.medium_count || 0),
+        hard_count: total > 0 ? hard : (topic.hard_count || 0),
+      };
+    });
+  }, [dbTopics, activeQuestions]);
 
   const allTests: TestResult[] = useMemo(() => {
     const list = [...(testHistory || [])];
@@ -119,10 +187,12 @@ export default function QuizMainPage() {
 
         {/* Subtitle */}
         <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
-          {quiz.subtitle || 'Ôn tập kiến thức blockchain qua 500+ câu hỏi trắc nghiệm, sau đó làm bài test 40 câu để đánh giá toàn diện năng lực.'}
+          {isEn
+            ? `Explore and practice with ${totalQuestionsCount} questions synchronized live from the question bank, then take the 40-question certification test.`
+            : `Ôn tập kiến thức blockchain qua ${totalQuestionsCount} câu hỏi được đồng bộ theo CSDL, sau đó làm bài test 40 câu để đánh giá toàn diện năng lực.`}
         </p>
 
-        {/* Review Wrong Questions Alert Banner (Strict to tests) */}
+        {/* Review Wrong Questions Alert Banner */}
         {testMistakesCount > 0 && latestFailedTest && (
           <div className="pt-1">
             <Link
@@ -189,13 +259,19 @@ export default function QuizMainPage() {
 
       {/* Topics Section */}
       <div className="space-y-5">
-        <h2 className="text-xl font-extrabold text-slate-900 dark:text-slate-100">
-          {isEn ? 'Practice by Topic' : 'Ôn tập theo chủ đề'}
-        </h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-extrabold text-slate-900 dark:text-slate-100">
+            {isEn ? 'Practice by Topic' : 'Ôn tập theo chủ đề'}
+          </h2>
+          <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+            <Database className="w-3.5 h-3.5 text-indigo-500" />
+            <span>{isEn ? `${totalQuestionsCount} questions in DB` : `${totalQuestionsCount} câu hỏi trong CSDL`}</span>
+          </div>
+        </div>
 
         {/* 3x3 Topics Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {QUIZ_TOPICS.map((topic) => {
+          {computedTopics.map((topic) => {
             const stats = topicStats[topic.slug] || { answered: 0, correct: 0 };
             const pct = topic.total_questions > 0 ? Math.round((stats.answered / topic.total_questions) * 100) : 0;
 
@@ -303,7 +379,7 @@ export default function QuizMainPage() {
             href="/quiz/practice?difficulty=all"
             className="px-7 py-2.5 rounded-xl font-bold text-sm bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-600 hover:text-white border border-indigo-200 dark:border-indigo-800 transition-all shadow-sm"
           >
-            {isEn ? 'All 500 Questions' : 'Tất cả 500 câu'}
+            {isEn ? `All ${totalQuestionsCount} Questions` : `Tất cả ${totalQuestionsCount} câu`}
           </Link>
         </div>
       </div>

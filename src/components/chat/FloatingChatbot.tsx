@@ -48,11 +48,6 @@ export default function FloatingChatbot() {
   const pathname = usePathname();
   const { language } = useLanguageStore();
 
-  // Do NOT render chatbot on any admin routes
-  if (pathname.startsWith('/admin')) {
-    return null;
-  }
-
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -95,6 +90,11 @@ export default function FloatingChatbot() {
       }, 200);
     }
   }, [isOpen]);
+
+  // Do NOT render chatbot on any admin routes
+  if (pathname && pathname.startsWith('/admin')) {
+    return null;
+  }
 
   const handleSend = async (textToSend?: string) => {
     const messageContent = (textToSend || input).trim();

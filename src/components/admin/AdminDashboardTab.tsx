@@ -19,7 +19,12 @@ import { useAdminStore } from '@/store/useAdminStore';
 import { QUIZ_TOPICS } from '@/data/quizQuestions';
 
 export default function AdminDashboardTab({ onSwitchTab }: { onSwitchTab: (tabId: string) => void }) {
-  const { questions, topics, users, attempts } = useAdminStore();
+  const { questions, topics, users, attempts, fetchUsers, fetchAttempts } = useAdminStore();
+
+  React.useEffect(() => {
+    fetchUsers();
+    fetchAttempts();
+  }, [fetchUsers, fetchAttempts]);
 
   const currentTopics = topics && topics.length > 0 ? topics : QUIZ_TOPICS;
 
